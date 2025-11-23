@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "RxSync_CSE299",
-    "slug": "RxSync_CSE299",
+    "name": "CSE327_Project",
+    "slug": "CSE327_Project",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "rxsynccse299",
+    "scheme": "cse327project",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

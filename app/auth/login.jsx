@@ -1,9 +1,45 @@
 import { Link, useRouter } from "expo-router";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import {
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useAuth();
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function onLogin() {
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const user = await login(form.email, form.password);
+
+      if (user) {
+        Alert.alert("Success", "Logged in successfully!");
+        router.replace("/home");
+      }
+    } catch (error) {
+      Alert.alert("Login Error", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <SafeAreaView className="flex-1 justify-start items-center px-5">
@@ -16,10 +52,17 @@ export default function Login() {
         <TextInput
           className="text-black border border-gray-600 rounded-xl px-4 py-5 placeholder:text-gray-600"
           placeholder="Email"
+          value={form.email}
+          onChangeText={(e) => setForm({ ...form, email: e.toLowerCase() })}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           className="text-black border border-gray-600 rounded-xl px-4 py-5 placeholder:text-gray-600"
           placeholder="Password"
+          value={form.password}
+          onChangeText={(e) => setForm({ ...form, password: e })}
+          secureTextEntry
         />
       </View>
 
@@ -34,11 +77,14 @@ export default function Login() {
 
       <View className="w-full mb-10">
         <TouchableOpacity
-          className="bg-[#3D6DB4] rounded-3xl py-6"
-          onPress={() => router.navigate("/home")}
+          className={`bg-[#3D6DB4] rounded-3xl py-6 ${
+            isLoading ? "opacity-50" : ""
+          }`}
+          onPress={onLogin}
+          disabled={isLoading}
         >
           <Text className="text-white text-lg font-bold text-center">
-            Log In
+            {isLoading ? "Logging In..." : "Log In"}
           </Text>
         </TouchableOpacity>
       </View>
