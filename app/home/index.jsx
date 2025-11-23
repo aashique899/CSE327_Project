@@ -1,12 +1,21 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import DashboardList from "../(component)/dashboard_list";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Dashboard() {
+  const { user, logout } = useAuth();
+  const router = useRouter();
   const [selected, setSelected] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
+
+  const onLogout = async () => {
+    await logout();
+    router.replace("/auth/login");
+  };
 
   return (
     <ScrollView className="flex-1 bg-white p-5">
@@ -15,7 +24,12 @@ export default function Dashboard() {
           className="size-16 rounded-full"
           source={require("@/assets/images/Ashik.jpeg")}
         />
-        <Text className="text-black text-xl font-semibold">Welcome Ashik</Text>
+        <Text className="text-black text-xl font-semibold">
+          Welcome {user ? user.name : "User"}
+        </Text>
+        <TouchableOpacity className="ml-auto" onPress={onLogout}>
+          <Text className="text-red-500 font-medium">Logout</Text>
+        </TouchableOpacity>
       </View>
 
       <View className="gap-2 mb-6">
