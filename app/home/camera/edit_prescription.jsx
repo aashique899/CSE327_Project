@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import EditPrescriptionList from "../../(component)/edit_prescription_list"; // Adjust path
-import { useAuth } from "../../../context/AuthContext"; // Adjust path
-import { appwriteConfig, databases, ID } from "../../../lib/appwrite/config"; // Adjust path
+import EditPrescriptionList from "../../(component)/edit_prescription_list";
+import { useAuth } from "../../../context/AuthContext";
+import { appwriteConfig, databases, ID } from "../../../lib/appwrite/config";
 
 export default function EditPrescription() {
   const { photoUri, extractedData } = useLocalSearchParams();
@@ -70,11 +70,11 @@ export default function EditPrescription() {
       );
 
       Alert.alert("Success", "Prescription saved successfully!", [
-        { text: "OK", onPress: () => router.push("/home") }, // Adjust redirect
+        { text: "OK", onPress: () => router.push("/home") },
       ]);
     } catch (error) {
       console.error("Save Error:", error);
-      Alert.alert("Error", "Failed to save prescription: " + error.message);
+      Alert.alert("Error", "Failed to save prescription.");
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,6 @@ export default function EditPrescription() {
         </View>
       </ScrollView>
 
-      {/* Floating Confirm Button */}
       <View className="absolute bottom-0 w-full p-4 bg-white border-t border-gray-100">
         <TouchableOpacity
           className="bg-[#3D6DB4] rounded-3xl w-full py-4 shadow-lg"

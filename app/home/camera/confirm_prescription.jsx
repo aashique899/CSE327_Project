@@ -1,5 +1,7 @@
-import { appwriteConfig, functions } from "../../../lib/appwrite/config"; // Adjust path to config
+import { appwriteConfig, functions } from "../../../lib/appwrite/config";
 
+import * as FileSystem from "expo-file-system/legacy";
+import * as ImageManipulator from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -10,10 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-// IMPORT 1: For reading the file
-import * as FileSystem from "expo-file-system/legacy";
-// IMPORT 2: For compressing the huge image
-import * as ImageManipulator from "expo-image-manipulator";
 
 export default function ConfirmPrescription() {
   const { photoUri } = useLocalSearchParams();
@@ -26,21 +24,15 @@ export default function ConfirmPrescription() {
     try {
       setLoading(true);
 
-      // 1. COMPRESS THE IMAGE
-      // Raw camera images are too big (5MB+) and will crash the server.
-      // We resize it to max 1024px width and 60% quality.
       const manipulatedImage = await ImageManipulator.manipulateAsync(
         photoUri,
         [{ resize: { width: 1024 } }],
         { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG }
       );
 
-      // 2. Read the compressed image
       const base64 = await FileSystem.readAsStringAsync(manipulatedImage.uri, {
         encoding: "base64",
       });
-
-      console.log("Image compressed & encoded. Sending to Appwrite...");
 
       const execution = await functions.createExecution(
         appwriteConfig.functionId,
@@ -51,11 +43,9 @@ export default function ConfirmPrescription() {
         { "Content-Type": "application/json" }
       );
 
-      // 3. Handle Response
       if (execution.status === "completed") {
         const responseBody = JSON.parse(execution.responseBody);
 
-        // Check for logic errors from Python
         if (responseBody.success === false) {
           throw new Error(
             responseBody.error || "AI could not read the prescription."
@@ -70,17 +60,13 @@ export default function ConfirmPrescription() {
           },
         });
       } else {
-        // FIX: Handle cases where stderr is empty/undefined
         const errorDetails =
           execution.stderr || execution.responseBody || "Unknown server error";
         throw new Error(`Server Status ${execution.status}: ${errorDetails}`);
       }
     } catch (error) {
       console.error("Analysis Error:", error);
-      Alert.alert(
-        "Analysis Failed",
-        "Please try again or retake the photo.\n\nDetails: " + error.message
-      );
+      Alert.alert("Analysis Failed", "Please try again or retake the photo.");
     } finally {
       setLoading(false);
     }

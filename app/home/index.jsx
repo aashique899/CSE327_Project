@@ -14,9 +14,9 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 
-import DashboardList from "../(component)/dashboard_list"; // Adjust path
-import { useAuth } from "../../context/AuthContext"; // Adjust path
-import { appwriteConfig, databases } from "../../lib/appwrite/config"; // Adjust path
+import DashboardList from "../(component)/dashboard_list";
+import { useAuth } from "../../context/AuthContext";
+import { appwriteConfig, databases } from "../../lib/appwrite/config";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();

@@ -30,17 +30,12 @@ export default function DashboardList({
           {isSkipped ? (
             <Text className="text-red-500 font-bold text-xs">Skipped</Text>
           ) : (
-            <>
-              <Text className="text-gray-400 text-xs">
-                {isCompleted ? "Done" : "Mark"}
-              </Text>
-              <Checkbox
-                value={isCompleted}
-                onValueChange={(val) => onComplete(val)}
-                color={isCompleted ? "#3D6DB4" : undefined}
-                disabled={isSkipped}
-              />
-            </>
+            <Checkbox
+              value={isCompleted}
+              onValueChange={(val) => onComplete(val)}
+              color={isCompleted ? "#3D6DB4" : undefined}
+              disabled={isSkipped}
+            />
           )}
         </View>
 
