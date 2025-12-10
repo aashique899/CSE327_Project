@@ -55,11 +55,36 @@ export default function EditPrescription() {
     try {
       setLoading(true);
 
+      // let imageUrl = null;
+      // if (photoUri) {
+      //   const fileName = `prescription_${user.$id}_${Date.now()}.jpg`;
+
+      //   console.log(photoUri);
+
+      //   const file = {
+      //     uri: photoUri,
+      //     name: fileName,
+      //     size: 1234567,
+      //     type: "image/jpeg",
+      //   };
+
+      //   console.log(file);
+
+      //   const storageResponse = await storage.createFile(
+      //     appwriteConfig.bucketId,
+      //     ID.unique(),
+      //     file
+      //   );
+
+      //   imageUrl = `${appwriteConfig.endpoint}/storage/buckets/${appwriteConfig.bucketId}/files/${storageResponse.$id}/view?project=${appwriteConfig.projectId}`;
+      // }
+
       const payload = {
         user_id: user.$id,
         doctor_name: doctorName,
         hospital_name: hospitalName,
         medications: JSON.stringify(medications),
+        // image_url: imageUrl,
       };
 
       await databases.createDocument(
@@ -74,7 +99,7 @@ export default function EditPrescription() {
       ]);
     } catch (error) {
       console.error("Save Error:", error);
-      Alert.alert("Error", "Failed to save prescription.");
+      Alert.alert("Error", "Failed to save prescription: " + error.message);
     } finally {
       setLoading(false);
     }

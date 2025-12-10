@@ -1,29 +1,50 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
-export default function MedicalHistoryList() {
+export default function MedicalHistoryList({
+  doctorName,
+  hospitalName,
+  date,
+  imageUrl,
+  onPress,
+}) {
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
-    <View className="flex-1 flex-row bg-white shadow rounded-3xl max-h-[240px] p-4 mt-4">
+    <TouchableOpacity
+      onPress={onPress}
+      className="flex-1 flex-row bg-white shadow-sm shadow-gray-300 rounded-3xl p-4 mt-4 border border-gray-100"
+    >
       <Image
-        className="w-20 h-24 rounded-xl mr-2"
-        source={require("@/assets/images/Prescription.jpg")}
+        className="w-20 h-24 rounded-xl mr-4 bg-gray-200"
+        source={
+          imageUrl
+            ? { uri: imageUrl }
+            : require("@/assets/images/Prescription.jpg")
+        }
       />
 
-      <View>
-        <Text className="text-black text-xl font-bold">Dr. Ashik Huda</Text>
-        <Text className="text-black text-base font-normal">City Hospital</Text>
-        <Text className="text-black text-base font-light mt-auto">
-          Nov 01, 2025
+      <View className="flex-1 justify-between py-1">
+        <View>
+          <Text className="text-black text-lg font-bold" numberOfLines={1}>
+            {doctorName || "Unknown Doctor"}
+          </Text>
+          <Text className="text-gray-500 text-sm font-normal" numberOfLines={1}>
+            {hospitalName || "Unknown Hospital"}
+          </Text>
+        </View>
+
+        <Text className="text-blue-500 text-xs font-bold mt-auto">
+          {formattedDate}
         </Text>
       </View>
 
-      <View className="flex justify-start items-end gap-2 ml-auto">
-        <Text className="bg-green-500 text-white text-sm font-medium px-2 rounded-full">
-          #Fever
-        </Text>
-        <Text className="bg-green-500 text-white text-sm font-medium px-2 rounded-full">
-          #Ceveh
-        </Text>
+      <View className="flex justify-center">
+        <Text className="text-gray-300">›</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
